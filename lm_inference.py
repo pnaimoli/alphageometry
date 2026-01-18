@@ -81,8 +81,8 @@ class LanguageModelInference:
     for idx in self.encode_list(['.', ';']):
       eos[idx] = 1
 
-    self.eos = np.array(eos, dtype=np.bfloat16)
-    self.mask = jax.numpy.ones([1024], dtype=np.bfloat16)
+    self.eos = np.array(eos, dtype=np.float32)
+    self.mask = jax.numpy.ones([1024], dtype=np.float32)
 
   def decode(self, ids: list[int]) -> str:
     return self.vocab.decode(ids)
@@ -125,14 +125,14 @@ class LanguageModelInference:
           [{  # this dummy value will never be used.
               'current_index': np.array([0] * batch_size, dtype=np.int32),
               'keys': np.zeros(
-                  (batch_size, 2048, self.n, self.h), dtype=np.bfloat16
+                  (batch_size, 2048, self.n, self.h), dtype=np.float32
               ),
               'values': np.zeros(
-                  (batch_size, 2048, self.n, self.h), dtype=np.bfloat16
+                  (batch_size, 2048, self.n, self.h), dtype=np.float32
               ),
               'recurrent_kvq': None,
               'relative_position_bias': np.zeros(
-                  (batch_size, self.n, 1, 1024), dtype=np.bfloat16
+                  (batch_size, self.n, 1, 1024), dtype=np.float32
               ),
           }]
           * 12
@@ -157,7 +157,7 @@ class LanguageModelInference:
     if eos_tokens is not None:
       eos_ids = self.encode_list(eos_tokens)
       eos = np.array(
-          [1 if idx in eos_ids else 0 for idx in range(1024)], dtype=np.bfloat16
+          [1 if idx in eos_ids else 0 for idx in range(1024)], dtype=np.float32
       ).reshape((1, 1, 1024))
 
     mask = self.mask
@@ -165,7 +165,7 @@ class LanguageModelInference:
       mask_ids = self.encode_list(mask_tokens)
       mask = np.array(
           [0 if idx in mask_ids else 1 for idx in range(1024)],
-          dtype=np.bfloat16,
+          dtype=np.float32,
       ).reshape((1, 1, 1024))
 
     metrics_np = self.call(inputs, dstate=dstate, eos=eos, mask=mask)

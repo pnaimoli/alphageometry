@@ -42,17 +42,17 @@ class DecoderOnlyLanguageModelGenerate(models.DecoderOnlyLanguageModel):
         'dstate': tuple(
             [{
                 'current_index': jnp.array([0] * b, dtype=jnp.int32),
-                'keys': jnp.zeros((b, 2048, n, h), dtype=jnp.bfloat16),
-                'values': jnp.zeros((b, 2048, n, h), dtype=jnp.bfloat16),
+                'keys': jnp.zeros((b, 2048, n, h), dtype=jnp.float32),
+                'values': jnp.zeros((b, 2048, n, h), dtype=jnp.float32),
                 'recurrent_kvq': None,
                 'relative_position_bias': jnp.zeros(
-                    (b, n, 1, 1024), dtype=jnp.bfloat16
+                    (b, n, 1, 1024), dtype=jnp.float32
                 ),
             }]
             * 12
         ),
-        'eos': jnp.zeros([1024], dtype=jnp.bfloat16),
-        'mask': jnp.ones([1024], dtype=jnp.bfloat16),
+        'eos': jnp.zeros([1024], dtype=jnp.float32),
+        'mask': jnp.ones([1024], dtype=jnp.float32),
         'length': 1,
         'temperature': 1.0,
     })

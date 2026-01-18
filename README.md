@@ -1,6 +1,12 @@
 
 # Solving Olympiad Geometry without Human Demonstrations
 
+## Fork Notice
+
+This is a fork of [google-deepmind/alphageometry](https://github.com/google-deepmind/alphageometry) with the following modifications:
+- ARM Mac compatibility (bfloat16 → float32 conversion)
+
+---
 
 This repository contains the code necessary to
 reproduce DDAR and AlphaGeometry,
