@@ -166,6 +166,12 @@ a b = diff a b
 x : coll x a b, cong x a x b
 midp a b
 
+between_bound x a b
+x : a b
+a b = diff a b
+x : coll x a b
+between a b
+
 mirror x a b
 x : a b
 a b = diff a b

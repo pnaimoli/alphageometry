@@ -27,7 +27,7 @@ import numpy as np
 from numpy.random import uniform as unif  # pylint: disable=g-importing-member
 
 
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 
 
 ATOM = 1e-12
@@ -1235,6 +1235,8 @@ def draw(
     ymax = max([p.num.y for p in points])
     plt.margins((xmax - xmin) * 0.1, (ymax - ymin) * 0.1)
 
+  if save_to:
+    plt.savefig(save_to, bbox_inches='tight', dpi=150)
   plt.show(block=block)
 
 
@@ -1721,6 +1723,12 @@ def sketch_hline(args: tuple[gm.Point, ...]) -> HalfLine:
 def sketch_midp(args: tuple[gm.Point, ...]) -> Point:
   a, b = args
   return (a + b) * 0.5
+
+
+def sketch_between(args: tuple[gm.Point, ...]) -> Point:
+  a, b = args
+  t = unif(0.1, 0.9)  # Random t in (0,1), avoiding endpoints
+  return a + (b - a) * t
 
 
 def sketch_pentagon(args: tuple[gm.Point, ...]) -> tuple[Point, ...]:

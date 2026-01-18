@@ -5,6 +5,20 @@
 
 This is a fork of [google-deepmind/alphageometry](https://github.com/google-deepmind/alphageometry) with the following modifications:
 - ARM Mac compatibility (bfloat16 → float32 conversion)
+- Additional geometric constructions (between_bound)
+
+### New Constructions
+
+**between_bound**: Constructs a point inside a segment.
+
+Usage: `x = between_bound a b`
+
+Similar to `x = on_line x a b` but guarantees that `x` lies strictly between points `a` and `b` (not at the endpoints). Useful for constructing points within segments for problems requiring interior points.
+
+Example:
+```
+a b = segment a b; c = between_bound c a b
+```
 
 ---
 
