@@ -381,7 +381,11 @@ def try_translate_constrained_to_construct(string: str, g: gh.Graph) -> str:
   if string[-1] != ';':
     return 'ERROR: must end with ;'
 
-  head, prem_str = string.split(' : ')
+  parts = string.split(' : ')
+  if len(parts) != 2:
+    return f'ERROR: invalid format, expected "point : constructions ;" but got {len(parts)} parts'
+
+  head, prem_str = parts
   point = head.strip()
 
   if len(point) != 1 or point == ' ':
