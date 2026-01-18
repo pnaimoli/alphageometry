@@ -69,6 +69,9 @@ _VOCAB_PATH = flags.DEFINE_string(
 _OUT_FILE = flags.DEFINE_string(
     'out_file', '', 'path to the solution output file.'
 )  # pylint: disable=line-too-long
+_DIAGRAM_FILE = flags.DEFINE_string(
+    'diagram_file', '', 'path to the diagram output file.'
+)  # pylint: disable=line-too-long
 _BEAM_SIZE = flags.DEFINE_integer(
     'beam_size', 1, 'beam size of the proof search.'
 )  # pylint: disable=line-too-long
@@ -203,13 +206,14 @@ def get_lm(ckpt_init: str, vocab_path: str) -> lm.LanguageModelInference:
   return lm.LanguageModelInference(vocab_path, ckpt_init, mode='beam_search')
 
 
-def run_ddar(g: gh.Graph, p: pr.Problem, out_file: str) -> bool:
+def run_ddar(g: gh.Graph, p: pr.Problem, out_file: str, diagram_file: str = '') -> bool:
   """Run DD+AR.
 
   Args:
     g: gh.Graph object, containing the proof state.
     p: pr.Problem object, containing the problem statement.
     out_file: path to output file if solution is found.
+    diagram_file: path to diagram output file if provided.
 
   Returns:
     Boolean, whether DD+AR finishes successfully.
@@ -223,11 +227,14 @@ def run_ddar(g: gh.Graph, p: pr.Problem, out_file: str) -> bool:
 
   write_solution(g, p, out_file)
 
-  gh.nm.draw(
-      g.type2nodes[gh.Point],
-      g.type2nodes[gh.Line],
-      g.type2nodes[gh.Circle],
-      g.type2nodes[gh.Segment])
+  if diagram_file:
+    gh.nm.draw(
+        g.type2nodes[gh.Point],
+        g.type2nodes[gh.Line],
+        g.type2nodes[gh.Circle],
+        g.type2nodes[gh.Segment],
+        save_to=diagram_file,
+    )
   return True
 
 
@@ -635,7 +642,7 @@ def main(_):
 
   if _MODE.value == 'ddar':
     g, _ = gh.Graph.build_problem(this_problem, DEFINITIONS)
-    run_ddar(g, this_problem, _OUT_FILE.value)
+    run_ddar(g, this_problem, _OUT_FILE.value, _DIAGRAM_FILE.value)
 
   elif _MODE.value == 'alphageometry':
     model = get_lm(_CKPT_PATH.value, _VOCAB_PATH.value)
